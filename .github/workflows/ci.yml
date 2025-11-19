@@ -1,0 +1,24 @@
+name: Java CI with Maven
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: smetecnologia/maven:3.9.6-openjdk-21
+    steps:
+      - uses: actions/checkout@v3
+      - name: Make mvnw executable
+        run: chmod +x ./mvnw
+        continue-on-error: true
+      - name: Build with Maven
+        run: ./mvnw clean package || mvn clean package
+      - name: Upload artifact jar
+        uses: actions/upload-artifact@v3
+        with:
+          name: jar-files
+          path: target/*.jar
