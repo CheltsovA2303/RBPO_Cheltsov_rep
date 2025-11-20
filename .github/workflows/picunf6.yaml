@@ -1,0 +1,19 @@
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: maven:3.9.11-amazoncorretto-25-debian
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: build project
+        run: mvn clean package
+
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./target/*.jar
