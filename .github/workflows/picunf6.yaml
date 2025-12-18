@@ -17,3 +17,18 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ./target/*.jar
+  semgrep:
+    needs: build
+    runs-on: ubuntu-latest
+    container: semgrep/semgrep
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Scanning
+        run: semgrep scan --sarif --output ./semgrep.sarif ./
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
